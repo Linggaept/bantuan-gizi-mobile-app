@@ -28,6 +28,18 @@ import com.example.pelayananbantuangizi.data.api.model.LansiaDto
 import com.example.pelayananbantuangizi.data.repository.LansiaRepository
 import com.example.pelayananbantuangizi.util.UiState
 import com.example.pelayananbantuangizi.util.ViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
+
+private fun isoDateFormat(): SimpleDateFormat =
+    SimpleDateFormat("yyyy-MM-dd", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
+
+private fun parseDateToMillis(date: String): Long? = try {
+    if (date.isBlank()) null else isoDateFormat().parse(date)?.time
+} catch (_: Exception) { null }
+
+private fun millisToIsoDate(millis: Long): String = isoDateFormat().format(java.util.Date(millis))
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,6 +64,7 @@ fun LansiaFormScreen(
     var fotoUri by remember { mutableStateOf<Uri?>(null) }
     var existingFotoUrl by remember { mutableStateOf<String?>(null) }
     var prefilled by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     val isEditMode = lansiaId != null
     val title = if (isEditMode) "Edit Data Lansia" else "Tambah Lansia"
@@ -131,15 +144,53 @@ fun LansiaFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
-                value = tanggalLahir,
-                onValueChange = { tanggalLahir = it },
-                label = { Text("Tanggal Lahir (YYYY-MM-DD)") },
-                placeholder = { Text("1950-01-01") },
-                singleLine = true,
-                trailingIcon = { Icon(Icons.Default.DateRange, null) },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = tanggalLahir,
+                    onValueChange = {},
+                    label = { Text("Tanggal Lahir") },
+                    placeholder = { Text("Pilih tanggal") },
+                    singleLine = true,
+                    readOnly = true,
+                    enabled = false,
+                    trailingIcon = { Icon(Icons.Default.DateRange, null) },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledBorderColor = MaterialTheme.colorScheme.outline,
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(RoundedCornerShape(4.dp))
+                        .clickable { showDatePicker = true }
+                )
+            }
+
+            if (showDatePicker) {
+                val initialMillis = parseDateToMillis(tanggalLahir)
+                val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialMillis)
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            datePickerState.selectedDateMillis?.let {
+                                tanggalLahir = millisToIsoDate(it)
+                            }
+                            showDatePicker = false
+                        }) { Text("OK") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDatePicker = false }) { Text("Batal") }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
 
             Text("Jenis Kelamin", style = MaterialTheme.typography.labelLarge)
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
