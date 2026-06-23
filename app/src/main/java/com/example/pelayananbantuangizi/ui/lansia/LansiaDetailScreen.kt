@@ -32,6 +32,7 @@ fun LansiaDetailScreen(
     lansiaId: Int,
     onNavigateToEdit: (Int) -> Unit,
     onNavigateToPemeriksaan: (Int) -> Unit,
+    onNavigateToMonitoring: (Int, String) -> Unit,
     onDeleted: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -178,8 +179,7 @@ fun LansiaDetailScreen(
                                     val statusColor = if (status.statusPenerima == "penerima")
                                         MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                                     Text(statusText, color = statusColor, style = MaterialTheme.typography.titleMedium)
-                                    status.periodeBulan?.let { DetailRow("Periode", "$it/${status.periodeTahun}") }
-                                    status.skorRanking?.let { DetailRow("Skor Ranking", "%.4f".format(it)) }
+                                    status.periodeBulan?.let { DetailRow("Periode", periodeLabel(it, status.periodeTahun)) }
                                 } else {
                                     Text("Belum ada data bantuan", color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
@@ -195,6 +195,15 @@ fun LansiaDetailScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("Lihat Riwayat Pemeriksaan")
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            val nama = (lansiaState as? UiState.Success)?.data?.nama ?: ""
+                            onNavigateToMonitoring(lansiaId, nama)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Monitoring Kesehatan")
                     }
                 }
             }
@@ -230,6 +239,17 @@ private fun DetailSection(title: String, content: @Composable ColumnScope.() -> 
             content()
         }
     }
+}
+
+private fun periodeLabel(bulan: Int, tahun: Int?): String {
+    val (q, range) = when (bulan) {
+        1 -> "Q1" to "Jan–Mar"
+        4 -> "Q2" to "Apr–Jun"
+        7 -> "Q3" to "Jul–Sep"
+        10 -> "Q4" to "Okt–Des"
+        else -> "Q?" to "-"
+    }
+    return "$q ${tahun ?: "?"} ($range)"
 }
 
 @Composable

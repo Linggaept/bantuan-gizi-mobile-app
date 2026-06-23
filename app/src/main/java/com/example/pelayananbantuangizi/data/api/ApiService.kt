@@ -54,4 +54,7 @@ interface ApiService {
         @Path("id") id: Int,
         @Body request: CreatePemeriksaanRequest
     ): Response<DataWrapper<PemeriksaanDto>>
+
+    @GET("lansia/{id}/monitoring")
+    suspend fun getMonitoring(@Path("id") id: Int): Response<DataWrapper<List<MonitoringEntryDto>>>
 }

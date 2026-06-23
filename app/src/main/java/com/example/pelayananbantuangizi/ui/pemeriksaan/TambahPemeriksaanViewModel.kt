@@ -18,30 +18,17 @@ class TambahPemeriksaanViewModel(private val repository: PemeriksaanRepository) 
 
     fun submit(
         lansiaId: Int,
-        tanggalPeriksa: String,
         beratBadan: String,
         tekananDarah: String,
-        hasilPeriksa: String,
         catatan: String
     ) {
-        val errors = mutableListOf<String>()
-        if (tanggalPeriksa.isBlank()) errors.add("Tanggal periksa wajib diisi")
-        if (hasilPeriksa !in listOf("baik", "sedang", "buruk")) errors.add("Hasil periksa wajib dipilih")
-
-        if (errors.isNotEmpty()) {
-            _state.value = UiState.Error(errors.joinToString("\n"))
-            return
-        }
-
         viewModelScope.launch {
             _state.value = UiState.Loading
             val result = repository.createPemeriksaan(
                 lansiaId,
                 CreatePemeriksaanRequest(
-                    tanggalPeriksa = tanggalPeriksa,
                     beratBadan = beratBadan.toDoubleOrNull(),
                     tekananDarah = tekananDarah.ifBlank { null },
-                    hasilPeriksa = hasilPeriksa,
                     catatan = catatan.ifBlank { null }
                 )
             )

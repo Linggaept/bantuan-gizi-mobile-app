@@ -45,6 +45,7 @@ data class LansiaDto(
     val alamat: String,
     val rt: String?,
     val rw: String,
+    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
     @SerializedName("foto_ktp") val fotoKtp: String?,
     @SerializedName("kondisi_kesehatan") val kondisiKesehatan: String?,
     @SerializedName("created_by") val createdBy: Int?,
@@ -59,7 +60,9 @@ data class CreateLansiaRequest(
     @SerializedName("jenis_kelamin") val jenisKelamin: String,
     val alamat: String,
     val rt: String?,
-    val rw: String
+    val rw: String,
+    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
+    @SerializedName("kondisi_kesehatan") val kondisiKesehatan: String?
 )
 
 data class UpdateLansiaRequest(
@@ -69,7 +72,9 @@ data class UpdateLansiaRequest(
     @SerializedName("jenis_kelamin") val jenisKelamin: String?,
     val alamat: String?,
     val rt: String?,
-    val rw: String?
+    val rw: String?,
+    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
+    @SerializedName("kondisi_kesehatan") val kondisiKesehatan: String?
 )
 
 // --- Status Bantuan ---
@@ -92,13 +97,26 @@ data class PemeriksaanDto(
     @SerializedName("berat_badan") val beratBadan: Double?,
     @SerializedName("tekanan_darah") val tekananDarah: String?,
     @SerializedName("hasil_periksa") val hasilPeriksa: String,
-    val catatan: String?
+    val catatan: String?,
+    @SerializedName("periode_bulan") val periodeBulan: Int?,
+    @SerializedName("periode_tahun") val periodeTahun: Int?,
+    val trend: String?  // "membaik", "menurun", "tetap", or null
 )
 
 data class CreatePemeriksaanRequest(
+    @SerializedName("berat_badan") val beratBadan: Double?,
+    @SerializedName("tekanan_darah") val tekananDarah: String?,
+    val catatan: String?
+)
+
+data class MonitoringEntryDto(
+    @SerializedName("periode_bulan") val periodeBulan: Int,
+    @SerializedName("periode_tahun") val periodeTahun: Int,
+    val label: String,
     @SerializedName("tanggal_periksa") val tanggalPeriksa: String,
     @SerializedName("berat_badan") val beratBadan: Double?,
     @SerializedName("tekanan_darah") val tekananDarah: String?,
     @SerializedName("hasil_periksa") val hasilPeriksa: String,
-    val catatan: String?
+    val catatan: String?,
+    val trend: String?
 )

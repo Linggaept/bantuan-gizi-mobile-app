@@ -45,6 +45,8 @@ class LansiaFormViewModel(private val repository: LansiaRepository) : ViewModel(
         alamat: String,
         rt: String,
         rw: String,
+        tinggiBadan: String,
+        kondisiKesehatan: String,
         fotoUri: Uri?,
         contentResolver: ContentResolver
     ) {
@@ -73,7 +75,9 @@ class LansiaFormViewModel(private val repository: LansiaRepository) : ViewModel(
                         jenisKelamin = jenisKelamin,
                         alamat = alamat,
                         rt = rt.ifBlank { null },
-                        rw = rw
+                        rw = rw,
+                        tinggiBadan = tinggiBadan.toDoubleOrNull(),
+                        kondisiKesehatan = kondisiKesehatan.ifBlank { null }
                     )
                 )
             } else {
@@ -86,7 +90,9 @@ class LansiaFormViewModel(private val repository: LansiaRepository) : ViewModel(
                         jenisKelamin = jenisKelamin,
                         alamat = alamat,
                         rt = rt.ifBlank { null },
-                        rw = rw
+                        rw = rw,
+                        tinggiBadan = tinggiBadan.toDoubleOrNull(),
+                        kondisiKesehatan = kondisiKesehatan.ifBlank { null }
                     )
                 )
             }

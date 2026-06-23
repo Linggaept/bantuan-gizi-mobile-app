@@ -2,7 +2,6 @@ package com.example.pelayananbantuangizi.ui.lansia
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -40,6 +39,11 @@ fun LansiaListScreen(
     var showDeleteDialog by remember { mutableStateOf<LansiaDto?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
 
+    LaunchedEffect(searchText) {
+        kotlinx.coroutines.delay(300)
+        vm.search(searchText)
+    }
+
     LaunchedEffect(deleteState) {
         when (deleteState) {
             is UiState.Success -> {
@@ -59,16 +63,21 @@ fun LansiaListScreen(
             TopAppBar(
                 title = { Text("Data Lansia") },
                 actions = {
-                    IconButton(onClick = {
-                        // logout handled by parent via onLogout
-                        onLogout()
-                    }) {
+                    IconButton(onClick = { showFilterDialog = true }) {
+                        Icon(Icons.Default.Search, contentDescription = "Filter")
+                    }
+                    IconButton(onClick = { onLogout() }) {
                         Icon(Icons.Default.ExitToApp, contentDescription = "Logout")
                     }
                 }
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { onNavigateToForm(null) }) {
+                Icon(Icons.Default.Add, contentDescription = "Tambah Lansia")
+            }
+        }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             // Search bar
@@ -80,42 +89,8 @@ fun LansiaListScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                singleLine = true,
-                trailingIcon = {
-                    TextButton(onClick = { vm.search(searchText) }) { Text("Cari") }
-                }
+                singleLine = true
             )
-
-            // Filter chips + Tambah button row
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                FilterChip(
-                    selected = false,
-                    onClick = { showFilterDialog = true },
-                    label = { Text("Filter") }
-                )
-                if (vm.filterRw.isNotBlank() || vm.filterKondisi.isNotBlank() || vm.filterStatus.isNotBlank()) {
-                    FilterChip(
-                        selected = true,
-                        onClick = { vm.clearFilters(); searchText = "" },
-                        label = { Text("Reset") }
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Button(
-                    onClick = { onNavigateToForm(null) },
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(4.dp))
-                    Text("Tambah")
-                }
-            }
 
             // Content
             when {

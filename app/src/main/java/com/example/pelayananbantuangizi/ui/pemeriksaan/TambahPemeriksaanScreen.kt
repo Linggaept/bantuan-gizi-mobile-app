@@ -1,6 +1,5 @@
 package com.example.pelayananbantuangizi.ui.pemeriksaan
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -9,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -29,10 +27,8 @@ fun TambahPemeriksaanScreen(
     val vm: TambahPemeriksaanViewModel = viewModel(factory = ViewModelFactory(pemeriksaanRepository))
     val state by vm.state.collectAsState()
 
-    var tanggalPeriksa by remember { mutableStateOf("") }
     var beratBadan by remember { mutableStateOf("") }
     var tekananDarah by remember { mutableStateOf("") }
-    var hasilPeriksa by remember { mutableStateOf("") }
     var catatan by remember { mutableStateOf("") }
 
     LaunchedEffect(state) {
@@ -61,14 +57,15 @@ fun TambahPemeriksaanScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            OutlinedTextField(
-                value = tanggalPeriksa,
-                onValueChange = { tanggalPeriksa = it },
-                label = { Text("Tanggal Periksa (YYYY-MM-DD)") },
-                placeholder = { Text("2026-05-15") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text("Tanggal periksa otomatis (hari ini)", style = MaterialTheme.typography.bodySmall)
+                    Text("Hasil periksa otomatis dari BB & tensi", style = MaterialTheme.typography.bodySmall)
+                }
+            }
 
             OutlinedTextField(
                 value = beratBadan,
@@ -86,17 +83,6 @@ fun TambahPemeriksaanScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
-
-            Text("Hasil Periksa", style = MaterialTheme.typography.labelLarge)
-            listOf("baik" to "Baik", "sedang" to "Sedang", "buruk" to "Buruk").forEach { (value, label) ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { hasilPeriksa = value }
-                ) {
-                    RadioButton(selected = hasilPeriksa == value, onClick = { hasilPeriksa = value })
-                    Text(label)
-                }
-            }
 
             OutlinedTextField(
                 value = catatan,
@@ -118,7 +104,7 @@ fun TambahPemeriksaanScreen(
             Spacer(Modifier.height(8.dp))
 
             Button(
-                onClick = { vm.submit(lansiaId, tanggalPeriksa, beratBadan, tekananDarah, hasilPeriksa, catatan) },
+                onClick = { vm.submit(lansiaId, beratBadan, tekananDarah, catatan) },
                 modifier = Modifier.fillMaxWidth().height(48.dp),
                 enabled = state !is UiState.Loading
             ) {

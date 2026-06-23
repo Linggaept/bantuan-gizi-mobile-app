@@ -1,5 +1,6 @@
 package com.example.pelayananbantuangizi.util
 
+import org.json.JSONObject
 import retrofit2.Response
 import java.io.IOException
 
@@ -12,6 +13,27 @@ sealed class UiState<out T> {
 
 class ApiException(val code: Int, message: String) : Exception(message)
 
+private fun parseErrorBody(body: String?): String? {
+    if (body.isNullOrBlank()) return null
+    return try {
+        val json = JSONObject(body)
+        val errorsField = json.optJSONObject("errors")
+        if (errorsField != null) {
+            val msgs = mutableListOf<String>()
+            errorsField.keys().forEach { key ->
+                val arr = errorsField.optJSONArray(key)
+                if (arr != null) {
+                    for (i in 0 until arr.length()) msgs.add(arr.getString(i))
+                }
+            }
+            if (msgs.isNotEmpty()) return msgs.joinToString("\n")
+        }
+        json.optString("message").takeIf { it.isNotBlank() }
+    } catch (_: Exception) {
+        null
+    }
+}
+
 suspend fun <T> safeApiCall(call: suspend () -> Response<T>): Result<T> {
     return try {
         val response = call()
@@ -23,7 +45,9 @@ suspend fun <T> safeApiCall(call: suspend () -> Response<T>): Result<T> {
                 Result.success(@Suppress("UNCHECKED_CAST") Unit as T)
             }
         } else {
-            val errorMsg = when (response.code()) {
+            val errorBody = response.errorBody()?.string()
+            val parsed = parseErrorBody(errorBody)
+            val errorMsg = parsed ?: when (response.code()) {
                 401 -> "UNAUTHORIZED"
                 403 -> "Tidak punya akses"
                 404 -> "Data tidak ditemukan"

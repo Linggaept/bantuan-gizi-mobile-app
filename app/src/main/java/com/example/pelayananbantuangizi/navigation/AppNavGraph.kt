@@ -67,6 +67,7 @@ fun AppNavGraph(navController: NavHostController) {
                 lansiaId = lansiaId,
                 onNavigateToEdit = { id -> navController.navigate(Screen.LansiaForm.createRoute(id)) },
                 onNavigateToPemeriksaan = { id -> navController.navigate(Screen.PemeriksaanList.createRoute(id)) },
+                onNavigateToMonitoring = { id, nama -> navController.navigate(Screen.Monitoring.createRoute(id, nama)) },
                 onDeleted = {
                     navController.popBackStack(Screen.LansiaList.route, inclusive = false)
                 },
@@ -109,6 +110,22 @@ fun AppNavGraph(navController: NavHostController) {
                 pemeriksaanRepository = pemeriksaanRepo,
                 lansiaId = lansiaId,
                 onSuccess = { navController.popBackStack() },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = Screen.Monitoring.route,
+            arguments = listOf(
+                navArgument("lansiaId") { type = NavType.IntType },
+                navArgument("namaLansia") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val lansiaId = backStackEntry.arguments?.getInt("lansiaId") ?: return@composable
+            val namaLansia = backStackEntry.arguments?.getString("namaLansia") ?: ""
+            com.example.pelayananbantuangizi.ui.pemeriksaan.MonitoringScreen(
+                pemeriksaanRepository = pemeriksaanRepo,
+                lansiaId = lansiaId,
+                namaLansia = java.net.URLDecoder.decode(namaLansia, "UTF-8"),
                 onBack = { navController.popBackStack() }
             )
         }
