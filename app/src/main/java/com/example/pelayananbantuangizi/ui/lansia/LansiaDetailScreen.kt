@@ -173,15 +173,27 @@ fun LansiaDetailScreen(
                     DetailSection(title = "Status Bantuan") {
                         when (statusBantuanState) {
                             is UiState.Success -> {
-                                val status = (statusBantuanState as UiState.Success<StatusBantuanDto>).data
-                                if (status.statusPenerima != null) {
-                                    val statusText = if (status.statusPenerima == "penerima") "Penerima Bantuan" else "Bukan Penerima"
-                                    val statusColor = if (status.statusPenerima == "penerima")
-                                        MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                                    Text(statusText, color = statusColor, style = MaterialTheme.typography.titleMedium)
-                                    status.periodeBulan?.let { DetailRow("Periode", periodeLabel(it, status.periodeTahun)) }
-                                } else {
+                                val list = (statusBantuanState as UiState.Success<List<StatusBantuanDto>>).data
+                                if (list.isEmpty()) {
                                     Text("Belum ada data bantuan", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                } else {
+                                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                        list.forEach { status ->
+                                            Column {
+                                                val statusText = if (status.statusPenerima == "penerima") "Penerima Bantuan" else "Bukan Penerima"
+                                                val statusColor = if (status.statusPenerima == "penerima")
+                                                    MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                                                Text(statusText, color = statusColor, style = MaterialTheme.typography.titleSmall)
+                                                status.periodeBulan?.let {
+                                                    DetailRow("Periode", periodeLabel(it, status.periodeTahun))
+                                                }
+                                                status.skorRanking?.let {
+                                                    DetailRow("Skor", it.toString())
+                                                }
+                                            }
+                                            if (list.last() != status) HorizontalDivider()
+                                        }
+                                    }
                                 }
                             }
                             is UiState.Loading -> CircularProgressIndicator(modifier = Modifier.size(20.dp))

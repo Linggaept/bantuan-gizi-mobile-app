@@ -21,8 +21,8 @@ class LansiaDetailViewModel(private val repository: LansiaRepository) : ViewMode
     private val _lansiaState = MutableStateFlow<UiState<LansiaDto>>(UiState.Loading)
     val lansiaState: StateFlow<UiState<LansiaDto>> = _lansiaState.asStateFlow()
 
-    private val _statusBantuanState = MutableStateFlow<UiState<StatusBantuanDto>>(UiState.Idle)
-    val statusBantuanState: StateFlow<UiState<StatusBantuanDto>> = _statusBantuanState.asStateFlow()
+    private val _statusBantuanState = MutableStateFlow<UiState<List<StatusBantuanDto>>>(UiState.Idle)
+    val statusBantuanState: StateFlow<UiState<List<StatusBantuanDto>>> = _statusBantuanState.asStateFlow()
 
     private val _uploadState = MutableStateFlow<UiState<LansiaDto>>(UiState.Idle)
     val uploadState: StateFlow<UiState<LansiaDto>> = _uploadState.asStateFlow()

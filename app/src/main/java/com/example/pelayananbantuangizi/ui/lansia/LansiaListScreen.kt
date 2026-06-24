@@ -72,12 +72,7 @@ fun LansiaListScreen(
                 }
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToForm(null) }) {
-                Icon(Icons.Default.Add, contentDescription = "Tambah Lansia")
-            }
-        }
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             // Search bar
@@ -91,6 +86,18 @@ fun LansiaListScreen(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 singleLine = true
             )
+
+            // Tambah button — fixed below search
+            Button(
+                onClick = { onNavigateToForm(null) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Tambah Lansia")
+            }
 
             // Content
             when {
@@ -214,7 +221,7 @@ private fun FilterDialog(
     var kondisi by remember { mutableStateOf(currentKondisi) }
     var status by remember { mutableStateOf(currentStatus) }
 
-    val kondisiOptions = listOf("", "baik", "sedang", "buruk")
+    val kondisiOptions = listOf("", "sehat", "sakit")
     val statusOptions = listOf("", "penerima", "tidak_penerima")
 
     AlertDialog(

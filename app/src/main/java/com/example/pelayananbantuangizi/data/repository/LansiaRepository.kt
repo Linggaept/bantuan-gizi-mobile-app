@@ -31,6 +31,6 @@ class LansiaRepository(private val apiService: ApiService) {
     suspend fun uploadFotoKtp(id: Int, part: MultipartBody.Part): Result<LansiaDto> =
         safeApiCall { apiService.uploadFotoKtp(id, part) }.mapCatching { it.data }
 
-    suspend fun getStatusBantuan(id: Int): Result<StatusBantuanDto> =
+    suspend fun getStatusBantuan(id: Int): Result<List<StatusBantuanDto>> =
         safeApiCall { apiService.getStatusBantuan(id) }.mapCatching { it.data }
 }
