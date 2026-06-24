@@ -187,9 +187,7 @@ fun LansiaDetailScreen(
                                                 status.periodeBulan?.let {
                                                     DetailRow("Periode", periodeLabel(it, status.periodeTahun))
                                                 }
-                                                status.skorRanking?.let {
-                                                    DetailRow("Skor", it.toString())
-                                                }
+
                                             }
                                             if (list.last() != status) HorizontalDivider()
                                         }
