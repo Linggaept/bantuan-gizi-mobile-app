@@ -19,7 +19,11 @@ class TambahPemeriksaanViewModel(private val repository: PemeriksaanRepository) 
     fun submit(
         lansiaId: Int,
         beratBadan: String,
+        tinggiBadan: String,
         tekananDarah: String,
+        gulaDarah: String,
+        kolesterol: String,
+        asamUrat: String,
         catatan: String
     ) {
         viewModelScope.launch {
@@ -28,7 +32,11 @@ class TambahPemeriksaanViewModel(private val repository: PemeriksaanRepository) 
                 lansiaId,
                 CreatePemeriksaanRequest(
                     beratBadan = beratBadan.toDoubleOrNull(),
+                    tinggiBadan = tinggiBadan.toDoubleOrNull(),
                     tekananDarah = tekananDarah.ifBlank { null },
+                    gulaDarah = gulaDarah.toDoubleOrNull(),
+                    kolesterol = kolesterol.toDoubleOrNull(),
+                    asamUrat = asamUrat.toDoubleOrNull(),
                     catatan = catatan.ifBlank { null }
                 )
             )

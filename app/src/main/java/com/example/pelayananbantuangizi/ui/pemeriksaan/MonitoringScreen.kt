@@ -113,9 +113,11 @@ fun MonitoringScreen(
 
 @Composable
 private fun MonitoringCard(entry: MonitoringEntryDto) {
-    val isSehat = entry.hasilPeriksa == "sehat"
-    val statusColor = if (isSehat) Color(0xFF2E7D32) else MaterialTheme.colorScheme.error
-    val statusBg = if (isSehat) Color(0xFFE8F5E9) else Color(0xFFFFEBEE)
+    val (statusLabel, statusColor, statusBg) = when (entry.hasilPeriksa) {
+        "sehat" -> Triple("Sehat", Color(0xFF2E7D32), Color(0xFFE8F5E9))
+        "sakit_parah" -> Triple("Sakit Parah", Color(0xFFC62828), Color(0xFFFFEBEE))
+        else -> Triple("Sakit", Color(0xFFF57F17), Color(0xFFFFF8E1))
+    }
 
     val (trendText, trendColor) = when (entry.trend) {
         "membaik" -> "↑ Membaik" to Color(0xFF2E7D32)
@@ -136,7 +138,7 @@ private fun MonitoringCard(entry: MonitoringEntryDto) {
             ) {
                 Text(entry.label, style = MaterialTheme.typography.titleSmall)
                 Text(
-                    if (isSehat) "Sehat" else "Sakit",
+                    statusLabel,
                     color = statusColor,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -144,7 +146,11 @@ private fun MonitoringCard(entry: MonitoringEntryDto) {
             Spacer(Modifier.height(8.dp))
             Text("Tanggal: ${entry.tanggalPeriksa}", style = MaterialTheme.typography.bodySmall)
             entry.beratBadan?.let { Text("Berat badan: $it kg", style = MaterialTheme.typography.bodySmall) }
+            entry.tinggiBadan?.let { Text("Tinggi badan: $it cm", style = MaterialTheme.typography.bodySmall) }
             entry.tekananDarah?.let { Text("Tekanan darah: $it", style = MaterialTheme.typography.bodySmall) }
+            entry.gulaDarah?.let { Text("Gula darah: $it mg/dL", style = MaterialTheme.typography.bodySmall) }
+            entry.kolesterol?.let { Text("Kolesterol: $it mg/dL", style = MaterialTheme.typography.bodySmall) }
+            entry.asamUrat?.let { Text("Asam urat: $it mg/dL", style = MaterialTheme.typography.bodySmall) }
             entry.catatan?.let { Text("Catatan: $it", style = MaterialTheme.typography.bodySmall) }
             if (trendText.isNotEmpty()) {
                 Spacer(Modifier.height(4.dp))

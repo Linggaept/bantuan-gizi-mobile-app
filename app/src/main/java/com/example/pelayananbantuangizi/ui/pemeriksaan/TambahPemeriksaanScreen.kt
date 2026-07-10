@@ -28,7 +28,11 @@ fun TambahPemeriksaanScreen(
     val state by vm.state.collectAsState()
 
     var beratBadan by remember { mutableStateOf("") }
+    var tinggiBadan by remember { mutableStateOf("") }
     var tekananDarah by remember { mutableStateOf("") }
+    var gulaDarah by remember { mutableStateOf("") }
+    var kolesterol by remember { mutableStateOf("") }
+    var asamUrat by remember { mutableStateOf("") }
     var catatan by remember { mutableStateOf("") }
 
     LaunchedEffect(state) {
@@ -63,7 +67,7 @@ fun TambahPemeriksaanScreen(
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text("Tanggal periksa otomatis (hari ini)", style = MaterialTheme.typography.bodySmall)
-                    Text("Hasil periksa otomatis dari BB & tensi", style = MaterialTheme.typography.bodySmall)
+                    Text("Hasil periksa otomatis dari BB/TB, tensi, gula, kolesterol & asam urat", style = MaterialTheme.typography.bodySmall)
                 }
             }
 
@@ -77,10 +81,46 @@ fun TambahPemeriksaanScreen(
             )
 
             OutlinedTextField(
+                value = tinggiBadan,
+                onValueChange = { tinggiBadan = it },
+                label = { Text("Tinggi Badan (cm, opsional)") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
                 value = tekananDarah,
                 onValueChange = { tekananDarah = it },
                 label = { Text("Tekanan Darah (opsional, contoh: 120/80)") },
                 singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = gulaDarah,
+                onValueChange = { gulaDarah = it },
+                label = { Text("Gula Darah (mg/dL, opsional)") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = kolesterol,
+                onValueChange = { kolesterol = it },
+                label = { Text("Kolesterol (mg/dL, opsional)") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            OutlinedTextField(
+                value = asamUrat,
+                onValueChange = { asamUrat = it },
+                label = { Text("Asam Urat (mg/dL, opsional)") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -104,7 +144,7 @@ fun TambahPemeriksaanScreen(
             Spacer(Modifier.height(8.dp))
 
             Button(
-                onClick = { vm.submit(lansiaId, beratBadan, tekananDarah, catatan) },
+                onClick = { vm.submit(lansiaId, beratBadan, tinggiBadan, tekananDarah, gulaDarah, kolesterol, asamUrat, catatan) },
                 modifier = Modifier.fillMaxWidth().height(48.dp),
                 enabled = state !is UiState.Loading
             ) {

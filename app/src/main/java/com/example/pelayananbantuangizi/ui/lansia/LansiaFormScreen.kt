@@ -61,8 +61,6 @@ fun LansiaFormScreen(
     var alamat by remember { mutableStateOf("") }
     var rt by remember { mutableStateOf("") }
     var rw by remember { mutableStateOf("") }
-    var tinggiBadan by remember { mutableStateOf("") }
-    var kondisiKesehatan by remember { mutableStateOf("") }
     var fotoUri by remember { mutableStateOf<Uri?>(null) }
     var existingFotoUrl by remember { mutableStateOf<String?>(null) }
     var prefilled by remember { mutableStateOf(false) }
@@ -89,8 +87,6 @@ fun LansiaFormScreen(
             alamat = lansia.alamat
             rt = lansia.rt ?: ""
             rw = lansia.rw
-            tinggiBadan = lansia.tinggiBadan?.toString() ?: ""
-            kondisiKesehatan = lansia.kondisiKesehatan ?: ""
             existingFotoUrl = lansia.fotoKtp
             prefilled = true
         }
@@ -235,26 +231,6 @@ fun LansiaFormScreen(
                 )
             }
 
-            OutlinedTextField(
-                value = tinggiBadan,
-                onValueChange = { tinggiBadan = it },
-                label = { Text("Tinggi Badan (cm, opsional)") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Text("Kondisi Kesehatan (opsional)", style = MaterialTheme.typography.labelLarge)
-            listOf("sehat" to "Sehat", "sakit" to "Sakit").forEach { (value, label) ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { kondisiKesehatan = value }
-                ) {
-                    RadioButton(selected = kondisiKesehatan == value, onClick = { kondisiKesehatan = value })
-                    Text(label)
-                }
-            }
-
             // Foto KTP section
             Text("Foto KTP (opsional)", style = MaterialTheme.typography.labelLarge)
 
@@ -308,7 +284,6 @@ fun LansiaFormScreen(
                 onClick = {
                     vm.submit(
                         lansiaId, nik, nama, tanggalLahir, jenisKelamin, alamat, rt, rw,
-                        tinggiBadan, kondisiKesehatan,
                         fotoUri, context.contentResolver
                     )
                 },

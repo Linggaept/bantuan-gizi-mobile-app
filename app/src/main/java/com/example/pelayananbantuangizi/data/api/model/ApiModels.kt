@@ -45,7 +45,6 @@ data class LansiaDto(
     val alamat: String,
     val rt: String?,
     val rw: String,
-    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
     @SerializedName("foto_ktp") val fotoKtp: String?,
     @SerializedName("kondisi_kesehatan") val kondisiKesehatan: String?,
     @SerializedName("created_by") val createdBy: Int?,
@@ -60,9 +59,7 @@ data class CreateLansiaRequest(
     @SerializedName("jenis_kelamin") val jenisKelamin: String,
     val alamat: String,
     val rt: String?,
-    val rw: String,
-    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
-    @SerializedName("kondisi_kesehatan") val kondisiKesehatan: String?
+    val rw: String
 )
 
 data class UpdateLansiaRequest(
@@ -72,9 +69,7 @@ data class UpdateLansiaRequest(
     @SerializedName("jenis_kelamin") val jenisKelamin: String?,
     val alamat: String?,
     val rt: String?,
-    val rw: String?,
-    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
-    @SerializedName("kondisi_kesehatan") val kondisiKesehatan: String?
+    val rw: String?
 )
 
 // --- Status Bantuan ---
@@ -95,7 +90,11 @@ data class PemeriksaanDto(
     @SerializedName("lansia_id") val lansiaId: Int,
     @SerializedName("tanggal_periksa") val tanggalPeriksa: String,
     @SerializedName("berat_badan") val beratBadan: Double?,
+    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
     @SerializedName("tekanan_darah") val tekananDarah: String?,
+    @SerializedName("gula_darah") val gulaDarah: Double?,
+    val kolesterol: Double?,
+    @SerializedName("asam_urat") val asamUrat: Double?,
     @SerializedName("hasil_periksa") val hasilPeriksa: String,
     val catatan: String?,
     @SerializedName("periode_bulan") val periodeBulan: Int?,
@@ -105,7 +104,11 @@ data class PemeriksaanDto(
 
 data class CreatePemeriksaanRequest(
     @SerializedName("berat_badan") val beratBadan: Double?,
+    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
     @SerializedName("tekanan_darah") val tekananDarah: String?,
+    @SerializedName("gula_darah") val gulaDarah: Double?,
+    val kolesterol: Double?,
+    @SerializedName("asam_urat") val asamUrat: Double?,
     val catatan: String?
 )
 
@@ -115,7 +118,11 @@ data class MonitoringEntryDto(
     val label: String,
     @SerializedName("tanggal_periksa") val tanggalPeriksa: String,
     @SerializedName("berat_badan") val beratBadan: Double?,
+    @SerializedName("tinggi_badan") val tinggiBadan: Double?,
     @SerializedName("tekanan_darah") val tekananDarah: String?,
+    @SerializedName("gula_darah") val gulaDarah: Double?,
+    val kolesterol: Double?,
+    @SerializedName("asam_urat") val asamUrat: Double?,
     @SerializedName("hasil_periksa") val hasilPeriksa: String,
     val catatan: String?,
     val trend: String?
