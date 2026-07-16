@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,6 +46,7 @@ fun MonitoringScreen(
     pemeriksaanRepository: PemeriksaanRepository,
     lansiaId: Int,
     namaLansia: String,
+    onNavigateToTambah: (Int) -> Unit,
     onBack: () -> Unit
 ) {
     val vm: MonitoringViewModel = viewModel(factory = ViewModelFactory(pemeriksaanRepository))
@@ -62,6 +64,11 @@ fun MonitoringScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { onNavigateToTambah(lansiaId) }) {
+                Icon(Icons.Default.Add, contentDescription = "Tambah Pemeriksaan")
+            }
         }
     ) { padding ->
         when (state) {
@@ -113,12 +120,6 @@ fun MonitoringScreen(
 
 @Composable
 private fun MonitoringCard(entry: MonitoringEntryDto) {
-    val (statusLabel, statusColor, statusBg) = when (entry.hasilPeriksa) {
-        "sehat" -> Triple("Sehat", Color(0xFF2E7D32), Color(0xFFE8F5E9))
-        "sakit_parah" -> Triple("Sakit Parah", Color(0xFFC62828), Color(0xFFFFEBEE))
-        else -> Triple("Sakit", Color(0xFFF57F17), Color(0xFFFFF8E1))
-    }
-
     val (trendText, trendColor) = when (entry.trend) {
         "membaik" -> "↑ Membaik" to Color(0xFF2E7D32)
         "menurun" -> "↓ Menurun" to MaterialTheme.colorScheme.error
@@ -126,23 +127,9 @@ private fun MonitoringCard(entry: MonitoringEntryDto) {
         else -> "" to MaterialTheme.colorScheme.onSurfaceVariant
     }
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = statusBg)
-    ) {
+    Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(entry.label, style = MaterialTheme.typography.titleSmall)
-                Text(
-                    statusLabel,
-                    color = statusColor,
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
+            Text(entry.label, style = MaterialTheme.typography.titleSmall)
             Spacer(Modifier.height(8.dp))
             Text("Tanggal: ${entry.tanggalPeriksa}", style = MaterialTheme.typography.bodySmall)
             entry.beratBadan?.let { Text("Berat badan: $it kg", style = MaterialTheme.typography.bodySmall) }

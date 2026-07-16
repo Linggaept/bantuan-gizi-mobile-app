@@ -10,9 +10,6 @@ sealed class Screen(val route: String) {
         fun createRoute(id: Int? = null) =
             if (id != null) "lansia_form?lansiaId=$id" else "lansia_form"
     }
-    object PemeriksaanList : Screen("pemeriksaan_list/{lansiaId}") {
-        fun createRoute(id: Int) = "pemeriksaan_list/$id"
-    }
     object TambahPemeriksaan : Screen("tambah_pemeriksaan/{lansiaId}") {
         fun createRoute(id: Int) = "tambah_pemeriksaan/$id"
     }

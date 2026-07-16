@@ -31,7 +31,6 @@ fun LansiaDetailScreen(
     lansiaRepository: LansiaRepository,
     lansiaId: Int,
     onNavigateToEdit: (Int) -> Unit,
-    onNavigateToPemeriksaan: (Int) -> Unit,
     onNavigateToMonitoring: (Int, String) -> Unit,
     onDeleted: () -> Unit,
     onBack: () -> Unit
@@ -180,7 +179,7 @@ fun LansiaDetailScreen(
                                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                         list.forEach { status ->
                                             Column {
-                                                val statusText = if (status.statusPenerima == "penerima") "Penerima Bantuan" else "Bukan Penerima"
+                                                val statusText = if (status.statusPenerima == "penerima") "Calon Penerima" else "Tidak Penerima"
                                                 val statusColor = if (status.statusPenerima == "penerima")
                                                     MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                                                 Text(statusText, color = statusColor, style = MaterialTheme.typography.titleSmall)
@@ -199,13 +198,6 @@ fun LansiaDetailScreen(
                         }
                     }
 
-                    // Pemeriksaan button
-                    OutlinedButton(
-                        onClick = { onNavigateToPemeriksaan(lansiaId) },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Lihat Riwayat Pemeriksaan")
-                    }
                     OutlinedButton(
                         onClick = {
                             val nama = (lansiaState as? UiState.Success)?.data?.nama ?: ""

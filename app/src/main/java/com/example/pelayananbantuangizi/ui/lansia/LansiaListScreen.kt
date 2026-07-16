@@ -223,6 +223,11 @@ private fun FilterDialog(
 
     val kondisiOptions = listOf("", "sehat", "sakit")
     val statusOptions = listOf("", "penerima", "tidak_penerima")
+    fun statusOptionLabel(opt: String) = when (opt) {
+        "" -> "Semua"
+        "penerima" -> "Calon Penerima"
+        else -> "Tidak Penerima"
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -253,7 +258,7 @@ private fun FilterDialog(
                         modifier = Modifier.clickable { status = opt }
                     ) {
                         RadioButton(selected = status == opt, onClick = { status = opt })
-                        Text(if (opt.isEmpty()) "Semua" else opt.replace("_", " ").replaceFirstChar { it.uppercase() })
+                        Text(statusOptionLabel(opt))
                     }
                 }
             }

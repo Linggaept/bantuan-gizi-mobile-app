@@ -46,9 +46,6 @@ interface ApiService {
     @GET("lansia/{id}/status-bantuan")
     suspend fun getStatusBantuan(@Path("id") id: Int): Response<DataWrapper<List<StatusBantuanDto>>>
 
-    @GET("lansia/{id}/pemeriksaan")
-    suspend fun getPemeriksaan(@Path("id") id: Int): Response<DataWrapper<List<PemeriksaanDto>>>
-
     @POST("lansia/{id}/pemeriksaan")
     suspend fun createPemeriksaan(
         @Path("id") id: Int,

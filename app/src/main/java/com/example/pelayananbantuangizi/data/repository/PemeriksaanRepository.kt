@@ -8,9 +8,6 @@ import com.example.pelayananbantuangizi.util.safeApiCall
 
 class PemeriksaanRepository(private val apiService: ApiService) {
 
-    suspend fun getPemeriksaan(lansiaId: Int): Result<List<PemeriksaanDto>> =
-        safeApiCall { apiService.getPemeriksaan(lansiaId) }.mapCatching { it.data }
-
     suspend fun createPemeriksaan(
         lansiaId: Int,
         request: CreatePemeriksaanRequest
